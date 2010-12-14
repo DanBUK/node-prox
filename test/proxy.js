@@ -9,6 +9,10 @@ exports.socks5 = function (assert) {
     var tc = setTimeout(function () {
         assert.fail('Never connected');
     }, 500);
+    
+    var td = setTimeout(function () {
+        assert.fail('Never got data');
+    }, 500);
      
     socks5.createServer(function (err, req, stream) {
         assert.eql(req.host, 'moo');
@@ -26,12 +30,9 @@ exports.socks5 = function (assert) {
             clearTimeout(tc);
         });
         
-        stream.on('error', function (msg) {
-            assert.fail(msg);
-        });
-        
         stream.on('data', function (buf) {
-            assert.eql(buf, new Buffer('oh hello'));
+            clearTimeout(td);
+            assert.eql(buf.toString(), 'oh hello');
         });
         
         stream.on('end', function () {
