@@ -14,11 +14,11 @@ exports.socks5 = function (assert) {
         assert.fail('Never ended');
     }, 500);
      
-    var server = socks5.createServer(function (err, req, stream) {
+    var server = socks5.createServer(function (req, res) {
         assert.eql(req.host, 'moo');
         assert.eql(req.port, 8080);
-        stream.write(new Buffer('oh hello'));
-        stream.end();
+        res.write(new Buffer('oh hello'));
+        res.end();
     });
     server.listen(port, ready);
     
